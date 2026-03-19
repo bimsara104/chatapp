@@ -25,18 +25,15 @@ jobs:
       - name: Install Capacitor CLI globally
         run: npm install -g @capacitor/cli
 
-      - name: Build frontend
+      - name: Create .env file from secrets
         run: |
-          echo "VITE_API_URL=$VITE_API_URL"
-          echo "VITE_WS_URL=$VITE_WS_URL"
-          # FIX: .env file ගෙ write කරලා build කරන්න
-          echo "VITE_API_URL=$VITE_API_URL" > .env
-          echo "VITE_WS_URL=$VITE_WS_URL" >> .env
-          cat .env
-          npm run build
+          printf 'VITE_API_URL=%s\nVITE_WS_URL=%s\n' "$VITE_API_URL" "$VITE_WS_URL" > .env
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
+
+      - name: Build frontend
+        run: npm run build
 
       - name: Sync Capacitor
         run: cap sync android
