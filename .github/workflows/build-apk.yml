@@ -26,7 +26,14 @@ jobs:
         run: npm install -g @capacitor/cli
 
       - name: Build frontend
-        run: npm run build
+        run: |
+          echo "VITE_API_URL=$VITE_API_URL"
+          echo "VITE_WS_URL=$VITE_WS_URL"
+          # FIX: .env file ගෙ write කරලා build කරන්න
+          echo "VITE_API_URL=$VITE_API_URL" > .env
+          echo "VITE_WS_URL=$VITE_WS_URL" >> .env
+          cat .env
+          npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
