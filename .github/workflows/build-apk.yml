@@ -29,7 +29,7 @@ jobs:
           VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: ./node_modules/.bin/cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
