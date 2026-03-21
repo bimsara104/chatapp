@@ -517,7 +517,7 @@ export default function ChatApp({ token, onLogout }) {
       const newUser = { ...currentUser, ...updateData, ...updated };
       localStorage.setItem("user", JSON.stringify(newUser));
       setCurrentUser(newUser);
-      setSettingsSuccess("Profile update una! ✅");
+      setSettingsSuccess("Profile updated! ✅");
       setTimeout(() => setSettingsSuccess(""), 3000);
     } catch (e) { setSettingsError(e.message || "Update karanna bari una!"); }
     finally { setSettingsLoading(false); }

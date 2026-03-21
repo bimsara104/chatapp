@@ -1,5 +1,9 @@
 {
   "appId": "com.chatapp.app",
   "appName": "ChatApp",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "url": "https://diachronic-carson-touristically.ngrok-free.dev",
+    "cleartext": true
+  }
 }
