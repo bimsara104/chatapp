@@ -1,9 +1,11 @@
 const BASE_URL = import.meta.env.VITE_API_URL || "";
+
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: {
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
@@ -32,28 +34,34 @@ export const api = {
 };
 
 // OTP endpoints
-api.sendOTP       = (phone) => request("/api/auth/send-otp", { method: "POST", body: JSON.stringify({ phone }) });
-api.verifyOTP     = (data) => request("/api/auth/verify-otp", { method: "POST", body: JSON.stringify(data) });
+api.sendOTP        = (phone) => request("/api/auth/send-otp", { method: "POST", body: JSON.stringify({ phone }) });
+api.verifyOTP      = (data) => request("/api/auth/verify-otp", { method: "POST", body: JSON.stringify(data) });
 api.whatsappStatus = () => request("/api/auth/whatsapp-status");
 
 // Group endpoints
-api.getMyGroups = () => request("/api/groups/my-groups");
-api.createGroup = (data) => request("/api/groups/create", { method: "POST", body: JSON.stringify(data) });
+api.getMyGroups     = () => request("/api/groups/my-groups");
+api.createGroup     = (data) => request("/api/groups/create", { method: "POST", body: JSON.stringify(data) });
 api.getGroupMembers = (groupId) => request(`/api/groups/${groupId}/members`);
-api.addGroupMember = (groupId, userId) => request(`/api/groups/${groupId}/add-member`, { method: "POST", body: JSON.stringify({ user_id: userId }) });
+api.addGroupMember  = (groupId, userId) => request(`/api/groups/${groupId}/add-member`, { method: "POST", body: JSON.stringify({ user_id: userId }) });
 api.getGroupMessages = (groupId, skip = 0) => request(`/api/messages/group/${groupId}?skip=${skip}&limit=50`);
-api.getRecentChats = () => request("/api/messages/recent-chats");
+api.getRecentChats  = () => request("/api/messages/recent-chats");
 
+// File upload
 api.uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch("/api/messages/upload", {
+  const res = await fetch(`${BASE_URL}/api/messages/upload`, {
     method: "POST",
-    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      "ngrok-skip-browser-warning": "true",
+    },
     body: formData,
   });
   if (!res.ok) throw new Error("Upload failed");
   return res.json();
 };
+
+// Meeting endpoints
 api.createMeeting = (data) => request("/api/meetings/create", { method: "POST", body: JSON.stringify(data) });
-api.getMeeting = (id) => request(`/api/meetings/${id}`);
+api.getMeeting    = (id) => request(`/api/meetings/${id}`);
